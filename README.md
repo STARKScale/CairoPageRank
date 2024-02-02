@@ -5,7 +5,7 @@ This project provides implementations of matrix multiplication and matrix-vector
 The repository includes two main components:
 
 Matrix Multiplication: A Cairo program that performs multiplication of two matrices using a map reduce approach.
-Matrix-Vector Multiplication: A Cairo program that multiplies a matrix by a vector, both of which are crucial in various computational and cryptographic contexts, especially within zk-SNARKs.
+Matrix-Vector Multiplication: A Cairo program that multiplies a matrix by a vector, both of which are crucial in various computational and cryptographic contexts, especially within zk-STARKs.
 These implementations are designed to demonstrate how complex mathematical operations can be executed within the Cairo language, maintaining the integrity and privacy guarantees provided by zk proofs.
 
 # Prerequisites
