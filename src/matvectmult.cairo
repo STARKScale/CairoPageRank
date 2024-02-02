@@ -63,10 +63,27 @@ trait matrixTrait {
     fn get_size(self: @Matrix) -> (u32, u32);
 }
 trait vecTrait {
-    //initialze a one matrix with [[row,id,value]]
+    /////////////////////////////////////////////////
+    //* Initialze a vector with value 1
+    //* @param col_size: u32
+    //* @param row_size: u32
+    //* @return Vector object with (index,value=1)
+    /////////////////////////////////////////////////
     fn init_one(size: u32) -> Vec;
-    //initialize with a vector
+
+    /////////////////////////////////////////////////
+    //* Initialze a vector with value an array
+    //* @param col_size: u32
+    //* @param row_size: u32
+    //* @param vec_array: [v1,v2,...]
+    //* @return Vector object with (index,value=1)
+    /////////////////////////////////////////////////
     fn init_array(size: u32, vec_arr: @Array<felt252>) -> Vec;
+
+    /////////////////////////////////////////////////
+    //* Return the length of the array
+    //* @param Vec: Snapshot of Vec object
+    /////////////////////////////////////////////////
     fn get_size(self: @Vec) -> u32;
 }
 impl vecPrintImpl of PrintTrait<Vec> {
@@ -172,7 +189,12 @@ impl vecTraitImp of vecTrait {
     }
 }
 
-//For Matrix vector Multiplication
+/////////////////////////////////////////////////
+//* Mapper for Matrix Vector Multiplication
+//* @param mat: Snapshot of matrix
+//* @param vec: Snapshot of Vector
+//* @return result: Array of (index,value) 
+/////////////////////////////////////////////////
 fn mapper(mat: @Matrix, vec: @Vec) -> Array<(u32, felt252)> {
     let (row_size, col_size) = mat.get_size();
     let vec_size = vec.get_size();

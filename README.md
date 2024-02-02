@@ -9,7 +9,51 @@ Matrix-Vector Multiplication: A Cairo program that multiplies a matrix by a vect
 These implementations are designed to demonstrate how complex mathematical operations can be executed within the Cairo language, maintaining the integrity and privacy guarantees provided by zk proofs.
 
 # Prerequisites
-Before you begin, ensure you have the following installed:
+Before you begin, ensure you have the environment installed:
 
-Cairo language environment.
-Scarab for compiling and testing Cairo programs.
+## Install asdf
+### For Linux
+```rust
+sudo apt install curl git
+git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.13.1
+
+//add this to the ~/.bashsrc file
+. "$HOME/.asdf/asdf.sh"
+. "$HOME/.asdf/completions/asdf.bash"
+
+code ~/.bashrc
+source ~/.bashrc
+```
+
+### For Mac
+
+```rust
+brew install asdf
+```
+If using macOS Catalina or newer, the default shell has changed to ZSH. Unless changing back to Bash, follow the ZSH instructions.
+
+Add asdf.sh to your ~/.bash_profile with:
+
+```rust
+echo -e "\n. \"$(brew --prefix asdf)/libexec/asdf.sh\"" >> ~/.bash_profile
+```
+
+Completions will need to be configured as per Homebrew's instructions or with the following:
+
+```rust
+echo -e "\n. \"$(brew --prefix asdf)/etc/bash_completion.d/asdf.bash\"" >> ~/.bash_profile
+```
+
+### Install Scarb
+```
+asdf plugin add scarb
+asdf install scarb latest
+asdf global scarb latest
+
+scarb --version
+```
+
+### To run the code
+``` rust
+scarb cairo-run --available-gas=200000000  
+```
