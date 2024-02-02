@@ -86,9 +86,13 @@ trait vecTrait {
     /////////////////////////////////////////////////
     fn get_size(self: @Vec) -> u32;
 }
+
+/////////////////////////////////////////////////
+// Implement the printing function of the vector
+/////////////////////////////////////////////////
 impl vecPrintImpl of PrintTrait<Vec> {
     fn print(self: Vec) {
-        self.size.print();
+        // self.size.print();
         let mut i = 0;
         loop {
             if (i >= self.size) {
@@ -101,6 +105,9 @@ impl vecPrintImpl of PrintTrait<Vec> {
         }
     }
 }
+/////////////////////////////////////////////////
+// Implementation fo MatrixTrait
+/////////////////////////////////////////////////
 impl matrixTraitImp of matrixTrait {
     fn init_one(row: u32, col: u32) -> Matrix {
         let mut matrix = Matrix { col_size: col, row_size: row, data: ArrayTrait::new() };
@@ -128,7 +135,6 @@ impl matrixTraitImp of matrixTrait {
         assert(row >= 1, 'empty matrix detected');
         assert(col == mat_arr.at(0).len(), 'col mismatch');
         assert(col >= 1, 'col mismatch');
-
         let mut i: u32 = 0;
         loop {
             if (i >= row) {
@@ -139,7 +145,6 @@ impl matrixTraitImp of matrixTrait {
                 if (j >= col) { // let value: felt252 = 10;
                     break;
                 }
-
                 let value = mat_arr.at(i).at(j);
                 matrix.data.append((i, j, *value));
                 j += 1;
@@ -148,11 +153,14 @@ impl matrixTraitImp of matrixTrait {
         };
         matrix
     }
-
     fn get_size(self: @Matrix) -> (u32, u32) {
         (*self.row_size, *self.col_size)
     }
 }
+
+/////////////////////////////////////////////////
+// Implementation fo VectorTrait
+/////////////////////////////////////////////////
 impl vecTraitImp of vecTrait {
     fn get_size(self: @Vec) -> u32 {
         *self.size
@@ -223,6 +231,12 @@ fn mapper(mat: @Matrix, vec: @Vec) -> Array<(u32, felt252)> {
     result
 }
 
+/////////////////////////////////////////////////
+//* Reducer for Matrix Vector Multiplication
+//* @param key: The specific index of the resulting vector
+//* @param mapper_result: Result of the vector
+//* @return result: Array of (index,value) 
+/////////////////////////////////////////////////
 fn reducer(key: u32, mapper_result: @Array<(u32, felt252)>) -> (u32, felt252) {
     let mut sum = 0;
     let mut i = 0;
@@ -240,8 +254,14 @@ fn reducer(key: u32, mapper_result: @Array<(u32, felt252)>) -> (u32, felt252) {
     (key, sum)
 }
 
+////////////////////////////////////////////////////////////////////////////////////
+//* Created for debug purpose
+//* Combine all the result from the mapper function, call reducer and return a result
+//* @param size: The length of the resulting vector
+//* @param mapper_result: Result of the vector
+//* @return result: Array of (index,value) 
+//////////////////////////////////////////////////////////////////////////////////////
 fn final_output(size: u32, mapper_result: @Array<(u32, felt252)>) -> Vec {
-    // let mut temp_dic: Felt252Dict<felt252> = Default::default();
     let mut temp_vec: Array<felt252> = Default::default();
     let mut i = 0;
     loop {
@@ -251,12 +271,9 @@ fn final_output(size: u32, mapper_result: @Array<(u32, felt252)>) -> Vec {
         let (key, sum) = reducer(i, mapper_result);
         assert(key == i, 'order should match');
 
-        // let key: felt252 = key.into();
-        // temp_dic.insert(key, sum);
         temp_vec.append(sum);
         i += 1;
     };
-    //copying value from dict to vect
     vecTrait::init_array(size, @temp_vec)
 }
 
