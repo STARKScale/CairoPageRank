@@ -42,6 +42,6 @@ impl PageRankTraitImpl of PageRankTrait {
         let internal_mat= matrixTrait::init_array(row,col,@self.graph);
         //initializing vector
         let vec_length= self.rank.length();
-        let internal_vect= matrixTrait::init_array()
+        let internal_vect= matrixTrait::init_array();
     }
 }

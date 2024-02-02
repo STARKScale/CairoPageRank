@@ -5,6 +5,13 @@ use array::ArrayTrait;
 use option::OptionTrait;
 use core::debug::PrintTrait;
 
+/////////////////////////////////////////////////
+//* A simple matrix structure 
+//* Internal Representation: (row, col, value)
+//* @param col_size: u32
+//* @param row_size: u32
+//* @param data: felt252
+/////////////////////////////////////////////////
 #[derive(Drop)]
 struct Matrix {
     col_size: u32,
@@ -12,17 +19,47 @@ struct Matrix {
     data: Array<(u32, u32, felt252)>
 }
 
+/////////////////////////////////////////////////
+//* A simple vector structure 
+//* Internal Representation: (i ,value)
+//* @param col_size: u32
+//* @param row_size: u32
+//* @param data: felt252
+/////////////////////////////////////////////////
 #[derive(Drop)]
 struct Vec {
     size: u32,
     data: Array<(u32, felt252)>
 }
 
+/////////////////////////////////////////////////
+/// This is the interface for the matrix object
+/////////////////////////////////////////////////
 trait matrixTrait {
-    //initialze a one matrix with [[row,id,value]]
+    
+    
+    /////////////////////////////////////////////////
+    //* Initialze a one matrix with [row,id]
+    //* @param col_size: u32
+    //* @param row_size: u32
+    //* @return Matrix object with (row,col,value=1)
+    /////////////////////////////////////////////////
     fn init_one(row: u32, col: u32) -> Matrix;
-    //initialize with array of array
+
+   /////////////////////////////////////////////////
+    //* Initialze a matrix with array of array
+    //* @param col_size: u32
+    //* @param row_size: u32
+    //* @param mat_arr: array of arrays
+    //* @return Matrix object with (row,col,value)
+    /////////////////////////////////////////////////
     fn init_array(row: u32, col: u32, mat_arr: @Array<Array<felt252>>) -> Matrix;
+    
+    /////////////////////////////////////////////////
+    //* Return size of the matrix object
+    //* @param snapshot of matrix
+    //* @return Matrix object with (row,col)
+    /////////////////////////////////////////////////
     fn get_size(self: @Matrix) -> (u32, u32);
 }
 trait vecTrait {
@@ -40,7 +77,7 @@ impl vecPrintImpl of PrintTrait<Vec> {
             if (i >= self.size) {
                 break;
             }
-            let (index, value) = self.data.at(i);
+            let (_index, value) = self.data.at(i);
             let temp_val = *value;
             temp_val.print();
             i += 1;
@@ -60,10 +97,6 @@ impl matrixTraitImp of matrixTrait {
                 if (j >= col) { // let value: felt252 = 10;
                     break;
                 }
-                // i.print();
-
-                // j.print();
-
                 let value: felt252 = 1;
                 matrix.data.append((i, j, value));
                 j += 1;
@@ -139,6 +172,7 @@ impl vecTraitImp of vecTrait {
     }
 }
 
+//For Matrix vector Multiplication
 fn mapper(mat: @Matrix, vec: @Vec) -> Array<(u32, felt252)> {
     let (row_size, col_size) = mat.get_size();
     let vec_size = vec.get_size();
@@ -158,7 +192,7 @@ fn mapper(mat: @Matrix, vec: @Vec) -> Array<(u32, felt252)> {
 
         assert(*row < row_size, 'row mismatch');
         assert(*col < col_size && *col < vec_size, 'col mismatch');
-        let (vec_index, vec_value) = vec.data.at(*col);
+        let (_vec_index, vec_value) = vec.data.at(*col);
         let value: felt252 = *mat_value * *vec_value;
         let entry = (*row, value);
         result.append(entry);
@@ -195,7 +229,7 @@ fn final_output(size: u32, mapper_result: @Array<(u32, felt252)>) -> Vec {
         let (key, sum) = reducer(i, mapper_result);
         assert(key == i, 'order should match');
 
-        let key: felt252 = key.into();
+        // let key: felt252 = key.into();
         // temp_dic.insert(key, sum);
         temp_vec.append(sum);
         i += 1;
@@ -203,3 +237,7 @@ fn final_output(size: u32, mapper_result: @Array<(u32, felt252)>) -> Vec {
     //copying value from dict to vect
     vecTrait::init_array(size, @temp_vec)
 }
+
+
+
+//For Matrix Matrix Multiplication
