@@ -208,7 +208,6 @@ fn mapper(mat: @Matrix, vec: @Vec) -> Array<(u32, felt252)> {
     let vec_size = vec.get_size();
     assert(vec_size == row_size, 'Dimension mismatch');
     let total_length = row_size * col_size;
-
     assert(total_length == mat.data.len(), 'total len neq matrix len');
     let mut i = 0;
     let mut result = ArrayTrait::new();
@@ -223,6 +222,10 @@ fn mapper(mat: @Matrix, vec: @Vec) -> Array<(u32, felt252)> {
         assert(*row < row_size, 'row mismatch');
         assert(*col < col_size && *col < vec_size, 'col mismatch');
         let (_vec_index, vec_value) = vec.data.at(*col);
+        //don't need to record zero value
+        if (*vec_value==0){
+            continue;
+        }
         let value: felt252 = *mat_value * *vec_value;
         let entry = (*row, value);
         result.append(entry);
@@ -279,4 +282,3 @@ fn final_output(size: u32, mapper_result: @Array<(u32, felt252)>) -> Vec {
 
 
 
-//For Matrix Matrix Multiplication

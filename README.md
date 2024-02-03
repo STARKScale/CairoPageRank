@@ -57,3 +57,8 @@ scarb --version
 ``` rust
 scarb cairo-run --available-gas=200000000  
 ```
+
+### To run the tests
+``` rust
+scarb cairo-test -f tests 
+```
